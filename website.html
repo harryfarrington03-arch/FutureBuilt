@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FutureBuilt: Smart Construction & Sustainable Buildings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Figtree:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --white: #ffffff;
+  --off-white: #fbfbfd;
+  --surface: #f5f5f7;
+  --surface-2: #e8e8ed;
+  --ink: #1d1d1f;
+  --ink-60: rgba(29,29,31,0.6);
+  --ink-40: rgba(29,29,31,0.4);
+  --ink-10: rgba(29,29,31,0.08);
+  --green: #1a7f4b;
+  --green-light: #30d158;
+  --green-pale: #e8f5ee;
+  --blue: #0066cc;
+  --blue-pale: #e8f0fa;
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+}
+
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+#progress-bar {
+  position: fixed; top: 0; left: 0; z-index: 300;
+  height: 2px; width: 0%;
+  background: linear-gradient(90deg, #1a7f4b, #0066cc, #30d158);
+  transition: width 0.1s linear;
+  pointer-events: none;
+}
+
+body {
+  font-family: 'Figtree', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--off-white);
+  color: var(--ink);
+  overflow-x: hidden;
+}
+
+/* ===================== NAV ===================== */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2.5rem;
+  height: 52px;
+  background: rgba(251,251,253,0.85);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 0.5px solid rgba(0,0,0,0.12);
+}
+.nav-wordmark {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.nav-wordmark em { font-style: italic; color: var(--green); }
+.nav-links {
+  display: flex; gap: 2rem; list-style: none;
+  position: absolute; left: 50%; transform: translateX(-50%);
+}
+.nav-links a {
+  font-size: 0.8rem; font-weight: 400;
+  color: var(--ink-60); text-decoration: none;
+  transition: color 0.2s; letter-spacing: 0;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-cta {
+  font-size: 0.8rem; font-weight: 500;
+  color: var(--blue); text-decoration: none;
+  transition: opacity 0.2s;
+}
+.nav-cta:hover { opacity: 0.7; }
+
+/* ===================== HERO ===================== */
+#hero {
+  min-height: 100vh;
+  padding-top: 52px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding-left: 2rem; padding-right: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero-ambient {
+  position: absolute; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 40%, rgba(26,127,75,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(0,102,204,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 80% at 50% 100%, rgba(26,127,75,0.04) 0%, transparent 50%);
+}
+#hero-canvas {
+  position: absolute; inset: 0; z-index: 0;
+  pointer-events: none; opacity: 0.5;
+}
+
+/* ===================== CHART SECTION ===================== */
+#supply-chart-section {
+  background: var(--surface);
+  padding: 8rem 5vw;
+}
+.chart-layout {
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1.6fr;
+  gap: 5rem; align-items: center;
+}
+.chart-container {
+  position: relative; width: 100%; height: 380px;
+}
+#supplyChart { width: 100%; height: 100%; }
+.chart-legend {
+  display: flex; gap: 1.5rem; margin-top: 1.5rem; flex-wrap: wrap;
+}
+.legend-item {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-size: 0.78rem; color: var(--ink-60); font-weight: 400;
+}
+.legend-dot {
+  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+}
+.chart-insight {
+  background: var(--white); border-radius: var(--radius-lg);
+  padding: 1.5rem; margin-top: 1.5rem;
+  border: 0.5px solid rgba(0,0,0,0.07);
+}
+.chart-insight-label {
+  font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--green); margin-bottom: 0.4rem;
+}
+.chart-insight-text {
+  font-size: 0.85rem; font-weight: 300; line-height: 1.6; color: var(--ink-60);
+}
+
+/* ===================== TECH FILTER ===================== */
+.tech-filter-bar {
+  max-width: 1200px; margin: 0 auto 2.5rem;
+  display: flex; gap: 0.6rem; flex-wrap: wrap;
+}
+.filter-btn {
+  padding: 0.5rem 1.1rem; border-radius: 980px;
+  font-size: 0.78rem; font-weight: 500;
+  border: 0.5px solid rgba(0,0,0,0.15);
+  background: var(--white); color: var(--ink-60);
+  cursor: pointer; transition: all 0.2s ease;
+  font-family: 'Figtree', sans-serif;
+}
+.filter-btn:hover { border-color: var(--green); color: var(--green); }
+.filter-btn.active {
+  background: var(--ink); color: var(--white); border-color: var(--ink);
+}
+.tech-tile { transition: transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94),
+              box-shadow 0.35s ease, opacity 0.3s ease; }
+.tech-tile.dimmed { opacity: 0.25; transform: scale(0.97); }
+.hero-eyebrow {
+  font-size: 0.75rem; font-weight: 500;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--green); margin-bottom: 1.5rem;
+  position: relative; z-index: 1;
+  opacity: 0; animation: fadeUp 0.8s ease 0.1s forwards;
+}
+.hero-title {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: clamp(3.2rem, 7vw, 6.5rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+  max-width: 900px;
+  position: relative; z-index: 1;
+  opacity: 0; animation: fadeUp 0.9s ease 0.2s forwards;
+}
+.hero-title em {
+  font-style: italic;
+  background: linear-gradient(135deg, #1a7f4b 0%, #0066cc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-sub {
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  font-weight: 300; line-height: 1.65;
+  color: var(--ink-60); max-width: 560px;
+  margin: 1.8rem auto 0;
+  position: relative; z-index: 1;
+  opacity: 0; animation: fadeUp 1s ease 0.35s forwards;
+}
+.hero-actions {
+  display: flex; gap: 1rem; justify-content: center;
+  margin-top: 2.8rem; flex-wrap: wrap;
+  position: relative; z-index: 1;
+  opacity: 0; animation: fadeUp 1s ease 0.5s forwards;
+}
+.btn-pill {
+  padding: 0.75rem 1.8rem; border-radius: 980px;
+  font-size: 0.92rem; font-weight: 500;
+  text-decoration: none; cursor: pointer; border: none;
+  transition: all 0.25s ease;
+  display: inline-block;
+}
+.btn-fill {
+  background: var(--ink); color: var(--white);
+}
+.btn-fill:hover { background: #3a3a3c; transform: scale(1.02); }
+.btn-ghost {
+  background: var(--surface); color: var(--ink);
+}
+.btn-ghost:hover { background: var(--surface-2); transform: scale(1.02); }
+
+.hero-numbers {
+  display: flex; gap: 3rem; margin-top: 5rem;
+  padding-top: 3rem; border-top: 0.5px solid var(--ink-10);
+  justify-content: center; flex-wrap: wrap;
+  position: relative; z-index: 1;
+  opacity: 0; animation: fadeUp 1s ease 0.65s forwards;
+}
+.hero-num-val {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 2.4rem; font-weight: 300;
+  letter-spacing: -0.04em; color: var(--ink);
+}
+.hero-num-label {
+  font-size: 0.75rem; color: var(--ink-40);
+  margin-top: 0.3rem; line-height: 1.5;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===================== SCROLL FADE ===================== */
+.reveal {
+  opacity: 0; transform: translateY(28px);
+  transition: opacity 0.75s cubic-bezier(0.25,0.46,0.45,0.94),
+              transform 0.75s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.reveal.in { opacity: 1; transform: none; }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* ===================== SECTION SHARED ===================== */
+.section-eyebrow {
+  font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--green); margin-bottom: 1rem;
+}
+.section-headline {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 300; letter-spacing: -0.03em;
+  line-height: 1.15; color: var(--ink);
+}
+.section-headline em { font-style: italic; color: var(--green); }
+.section-lead {
+  font-size: 1.05rem; font-weight: 300;
+  line-height: 1.75; color: var(--ink-60);
+  max-width: 640px; margin-top: 1.2rem;
+}
+
+/* ===================== CRISIS ===================== */
+#crisis {
+  background: var(--white);
+  padding: 8rem 5vw;
+}
+.crisis-layout {
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 6rem; align-items: start;
+  margin-top: 5rem;
+}
+.crisis-blocks {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+.crisis-block {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  padding: 1.75rem;
+}
+.crisis-block-num {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 2.8rem; font-weight: 300;
+  letter-spacing: -0.04em;
+  color: var(--ink); line-height: 1;
+}
+.crisis-block-num.green { color: var(--green); }
+.crisis-block-desc {
+  font-size: 0.82rem; line-height: 1.55;
+  color: var(--ink-60); margin-top: 0.5rem;
+}
+.crisis-points { margin-top: 2rem; }
+.crisis-point {
+  padding: 1.25rem 0;
+  border-bottom: 0.5px solid var(--ink-10);
+  font-size: 0.95rem; font-weight: 300;
+  line-height: 1.65; color: var(--ink-60);
+}
+.crisis-point:first-child { border-top: 0.5px solid var(--ink-10); }
+.crisis-point strong { color: var(--ink); font-weight: 500; }
+.crisis-source {
+  font-size: 0.72rem; color: var(--ink-40);
+  margin-top: 0.4rem; font-style: italic;
+}
+
+/* ===================== TECH ===================== */
+#technologies {
+  background: var(--off-white);
+  padding: 8rem 5vw;
+}
+.tech-header {
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 4rem; align-items: end;
+  margin-bottom: 4rem;
+}
+.tech-grid {
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+.tech-tile {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 0.5px solid rgba(0,0,0,0.07);
+  transition: transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94),
+              box-shadow 0.35s ease;
+}
+.tech-tile:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.1);
+}
+.tech-tile-top {
+  height: 160px; display: flex;
+  align-items: flex-end; padding: 1.75rem;
+  position: relative; overflow: hidden;
+}
+.tt-prefab { background: linear-gradient(135deg, #1c2b20 0%, #2d4a33 100%); }
+.tt-modular { background: linear-gradient(135deg, #0a1628 0%, #1a3050 100%); }
+.tt-print { background: linear-gradient(135deg, #2b1a10 0%, #4a2e1a 100%); }
+.tt-iot { background: linear-gradient(135deg, #0d1f2b 0%, #1a3a4a 100%); }
+.tt-ai { background: linear-gradient(135deg, #1a1028 0%, #2e1a4a 100%); }
+.tt-bim { background: linear-gradient(135deg, #0f2818 0%, #1a4a2e 100%); }
+
+.tech-tile-num {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 4.5rem; font-weight: 300;
+  color: rgba(255,255,255,0.08);
+  position: absolute; top: 0.5rem; right: 1.2rem;
+  line-height: 1; letter-spacing: -0.05em;
+}
+.tech-tile-tag {
+  font-size: 0.7rem; font-weight: 500;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  position: relative; z-index: 1;
+}
+.tech-tile-body { padding: 1.75rem; }
+.tech-tile-title {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 1.25rem; font-weight: 400;
+  letter-spacing: -0.02em; color: var(--ink);
+  margin-bottom: 0.75rem;
+}
+.tech-tile-text {
+  font-size: 0.85rem; line-height: 1.7;
+  color: var(--ink-60); font-weight: 300;
+}
+.tech-tile-foot {
+  padding: 1.2rem 1.75rem;
+  border-top: 0.5px solid var(--ink-10);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.tech-stat {
+  font-size: 0.78rem; font-weight: 500;
+  color: var(--green);
+}
+.watch-link {
+  font-size: 0.75rem; color: var(--blue);
+  text-decoration: none; font-weight: 500;
+  transition: opacity 0.2s;
+}
+.watch-link:hover { opacity: 0.6; }
+
+/* ===================== CASES ===================== */
+#research {
+  background: var(--ink);
+  padding: 8rem 5vw;
+  color: var(--white);
+}
+#research .section-eyebrow { color: var(--green-light); }
+#research .section-headline { color: var(--white); }
+#research .section-lead { color: rgba(255,255,255,0.55); }
+.cases-header {
+  max-width: 1200px; margin: 0 auto;
+}
+.cases-grid {
+  max-width: 1200px; margin: 4rem auto 0;
+  display: grid; grid-template-columns: 1.6fr 1fr;
+  gap: 1.5rem;
+}
+.case-main {
+  background: rgba(255,255,255,0.05);
+  border: 0.5px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-xl);
+  padding: 3rem;
+}
+.case-main-eyebrow {
+  font-size: 0.7rem; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--green-light); margin-bottom: 1.2rem;
+}
+.case-main-title {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 1.75rem; font-weight: 300;
+  letter-spacing: -0.03em; line-height: 1.25;
+  color: var(--white); margin-bottom: 1.2rem;
+}
+.case-main-body {
+  font-size: 0.9rem; font-weight: 300;
+  line-height: 1.75; color: rgba(255,255,255,0.55);
+  margin-bottom: 2.5rem;
+}
+.case-metrics-row {
+  display: flex; gap: 2.5rem;
+  padding-top: 2rem;
+  border-top: 0.5px solid rgba(255,255,255,0.1);
+}
+.case-metric-val {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 1.5rem; font-weight: 300;
+  color: var(--white); letter-spacing: -0.03em;
+}
+.case-metric-desc {
+  font-size: 0.72rem; color: rgba(255,255,255,0.4);
+  margin-top: 0.25rem; line-height: 1.5;
+}
+.cases-side { display: flex; flex-direction: column; gap: 1.5rem; }
+.case-card-sm {
+  background: rgba(255,255,255,0.05);
+  border: 0.5px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-lg);
+  padding: 2rem; flex: 1;
+}
+.case-card-sm-tag {
+  font-size: 0.68rem; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(255,255,255,0.35); margin-bottom: 0.75rem;
+}
+.case-card-sm-title {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 1.1rem; font-weight: 400;
+  color: var(--white); margin-bottom: 0.75rem;
+  line-height: 1.3; letter-spacing: -0.02em;
+}
+.case-card-sm-body {
+  font-size: 0.82rem; font-weight: 300;
+  line-height: 1.65; color: rgba(255,255,255,0.45);
+}
+
+/* ===================== NEWS ===================== */
+#news {
+  background: var(--white);
+  padding: 8rem 5vw;
+}
+.news-header {
+  max-width: 1200px; margin: 0 auto;
+}
+.news-grid {
+  max-width: 1200px; margin: 4rem auto 0;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+.news-card {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 0.5px solid rgba(0,0,0,0.08);
+  background: var(--white);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.news-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+}
+.news-band {
+  height: 6px;
+}
+.nb-green { background: linear-gradient(90deg, #1a7f4b, #30d158); }
+.nb-blue { background: linear-gradient(90deg, #0066cc, #34aadc); }
+.nb-stone { background: linear-gradient(90deg, #636366, #8e8e93); }
+.news-card-body { padding: 1.75rem; }
+.news-date {
+  font-size: 0.72rem; font-weight: 500;
+  color: var(--ink-40); letter-spacing: 0.06em;
+  margin-bottom: 0.75rem; text-transform: uppercase;
+}
+.news-card-title {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 1.15rem; font-weight: 400;
+  letter-spacing: -0.02em; line-height: 1.35;
+  color: var(--ink); margin-bottom: 0.9rem;
+}
+.news-card-text {
+  font-size: 0.85rem; font-weight: 300;
+  line-height: 1.7; color: var(--ink-60);
+}
+.news-tag {
+  display: inline-block; margin-top: 1.2rem;
+  font-size: 0.7rem; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.3rem 0.8rem; border-radius: 980px;
+}
+.nt-green { background: var(--green-pale); color: var(--green); }
+.nt-blue { background: var(--blue-pale); color: var(--blue); }
+.nt-stone { background: var(--surface); color: var(--ink-60); }
+
+/* ===================== TEAM ===================== */
+#team {
+  background: var(--surface);
+  padding: 8rem 5vw;
+}
+.team-header {
+  max-width: 1200px; margin: 0 auto;
+}
+.team-grid {
+  max-width: 1200px; margin: 4rem auto 0;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+.team-card {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  border: 0.5px solid rgba(0,0,0,0.07);
+  transition: transform 0.3s ease;
+}
+.team-card:hover { transform: translateY(-4px); }
+.team-avatar-area {
+  height: 220px; display: flex;
+  align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.ta-dark { background: linear-gradient(150deg, #1d1d1f 0%, #3a3a3c 100%); }
+.ta-green { background: linear-gradient(150deg, #0a2e18 0%, #1a7f4b 100%); }
+.ta-warm { background: linear-gradient(150deg, #2b1a10 0%, #6b3f1f 100%); }
+.avatar-circle {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 1.8rem; font-weight: 300;
+  color: rgba(255,255,255,0.6);
+}
+.team-card-body { padding: 2rem; }
+.team-name {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 1.3rem; font-weight: 400;
+  letter-spacing: -0.02em; color: var(--ink);
+}
+.team-role {
+  font-size: 0.78rem; font-weight: 600;
+  color: var(--green); letter-spacing: 0.05em;
+  text-transform: uppercase; margin: 0.4rem 0 1rem;
+}
+.team-bio {
+  font-size: 0.85rem; font-weight: 300;
+  line-height: 1.7; color: var(--ink-60);
+}
+.team-tags {
+  display: flex; flex-wrap: wrap; gap: 0.4rem;
+  margin-top: 1.25rem;
+}
+.team-tag {
+  font-size: 0.72rem; font-weight: 500;
+  padding: 0.3rem 0.75rem; border-radius: 980px;
+  background: var(--surface); color: var(--ink-60);
+}
+
+/* ===================== REFERENCES ===================== */
+#references {
+  background: var(--white);
+  padding: 8rem 5vw;
+}
+.refs-header { max-width: 1200px; margin: 0 auto; }
+.refs-list {
+  max-width: 1200px; margin: 3.5rem auto 0;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+.ref-row {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 0.5px solid var(--ink-10);
+  display: grid; grid-template-columns: 2rem 1fr;
+  gap: 1rem; align-items: start;
+}
+.ref-row:nth-child(odd) { border-right: 0.5px solid var(--ink-10); }
+.ref-n {
+  font-size: 0.75rem; font-weight: 600;
+  color: var(--ink-40); padding-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+.ref-text {
+  font-size: 0.83rem; font-weight: 300;
+  line-height: 1.6; color: var(--ink-60);
+}
+.ref-text em { font-style: italic; color: var(--ink); font-weight: 400; }
+
+/* ===================== CONTACT ===================== */
+#contact {
+  background: var(--off-white);
+  padding: 8rem 5vw;
+}
+.contact-wrap {
+  max-width: 1200px; margin: 0 auto;
+}
+.contact-grid {
+  display: grid; grid-template-columns: 1fr 1.2fr;
+  gap: 6rem; margin-top: 4rem; align-items: start;
+}
+.contact-info-item {
+  padding: 1.5rem 0;
+  border-bottom: 0.5px solid var(--ink-10);
+}
+.contact-info-item:first-of-type { border-top: 0.5px solid var(--ink-10); }
+.contact-info-label {
+  font-size: 0.7rem; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--green); margin-bottom: 0.4rem;
+}
+.contact-info-val {
+  font-size: 0.92rem; font-weight: 300;
+  color: var(--ink); line-height: 1.55;
+}
+.form-field { margin-bottom: 1rem; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+input[type="text"],
+input[type="email"],
+select,
+textarea {
+  width: 100%;
+  padding: 0.9rem 1.1rem;
+  background: var(--white);
+  border: 0.5px solid rgba(0,0,0,0.18);
+  border-radius: var(--radius-sm);
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.9rem; font-weight: 300;
+  color: var(--ink);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  appearance: none; -webkit-appearance: none;
+}
+input::placeholder, textarea::placeholder { color: var(--ink-40); }
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(0,102,204,0.12);
+}
+textarea { min-height: 120px; resize: none; }
+select { cursor: pointer; }
+.form-submit {
+  margin-top: 0.5rem;
+  padding: 0.9rem 2.2rem;
+  background: var(--ink); color: var(--white);
+  border: none; border-radius: 980px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 0.9rem; font-weight: 500;
+  cursor: pointer; transition: all 0.25s ease;
+}
+.form-submit:hover { background: #3a3a3c; transform: scale(1.02); }
+
+/* ===================== FOOTER ===================== */
+footer {
+  background: var(--ink); padding: 3.5rem 5vw;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 2rem;
+}
+.footer-brand {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 1.1rem; font-weight: 300;
+  color: rgba(255,255,255,0.7);
+}
+.footer-brand em { font-style: italic; color: var(--green-light); }
+.footer-copy {
+  font-size: 0.78rem; font-weight: 300;
+  color: rgba(255,255,255,0.35); line-height: 1.6;
+  margin-top: 0.3rem;
+}
+.footer-links {
+  display: flex; gap: 2rem; flex-wrap: wrap; list-style: none;
+}
+.footer-links a {
+  font-size: 0.78rem; color: rgba(255,255,255,0.4);
+  text-decoration: none; transition: color 0.2s;
+}
+.footer-links a:hover { color: rgba(255,255,255,0.8); }
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 960px) {
+  nav { padding: 0 1.5rem; }
+  .nav-links { display: none; }
+  .crisis-layout,
+  .tech-header,
+  .cases-grid,
+  .contact-grid,
+  .refs-list { grid-template-columns: 1fr; }
+  .tech-grid,
+  .news-grid,
+  .team-grid { grid-template-columns: 1fr; }
+  .crisis-blocks { grid-template-columns: 1fr 1fr; }
+  .cases-grid { grid-template-columns: 1fr; }
+  #crisis, #technologies, #research, #news, #team, #references, #contact { padding: 5rem 1.5rem; }
+  .ref-row:nth-child(odd) { border-right: none; }
+}
+</style>
+</head>
+<body>
+<div id="progress-bar"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-wordmark">Future<em>Built</em></div>
+  <ul class="nav-links">
+    <li><a href="#crisis">The Challenge</a></li>
+    <li><a href="#technologies">Technologies</a></li>
+    <li><a href="#research">Case Studies</a></li>
+    <li><a href="#news">News</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#references">References</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Contact</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-ambient"></div>
+  <p class="hero-eyebrow">Educational &nbsp; Research &nbsp; Consulting</p>
+  <h1 class="hero-title">Building a <em>smarter,<br>more sustainable</em> future</h1>
+  <p class="hero-sub">Smart construction technologies are reshaping how Australia builds. From prefabrication to AI-driven design, FutureBuilt researches, educates, and consults on the innovations defining the next era of the built environment.</p>
+  <div class="hero-actions">
+    <a href="#technologies" class="btn-pill btn-fill">Explore Technologies</a>
+    <a href="#research" class="btn-pill btn-ghost">View Research</a>
+  </div>
+  <div class="hero-numbers">
+    <div>
+      <div class="hero-num-val">1.2M</div>
+      <div class="hero-num-label">homes needed by 2029<br>National Housing Accord</div>
+    </div>
+    <div>
+      <div class="hero-num-val">122K</div>
+      <div class="hero-num-label">Australians experiencing<br>homelessness (ABS 2021)</div>
+    </div>
+    <div>
+      <div class="hero-num-val">40%</div>
+      <div class="hero-num-label">faster delivery with<br>modular construction</div>
+    </div>
+    <div>
+      <div class="hero-num-val">5.4%</div>
+      <div class="hero-num-label">national rental increase<br>year on year, Jan 2026</div>
+    </div>
+  </div>
+</section>
+
+<!-- CRISIS -->
+<section id="crisis">
+  <div class="crisis-layout">
+    <div class="reveal">
+      <p class="section-eyebrow">The Challenge</p>
+      <h2 class="section-headline">A housing shortage<br>and a climate <em>imperative</em></h2>
+      <p class="section-lead">Australia faces two converging pressures: a structural undersupply of housing and a built environment responsible for nearly a quarter of national greenhouse gas emissions. Smart construction directly addresses both.</p>
+      <div class="crisis-blocks">
+        <div class="crisis-block reveal reveal-delay-1">
+          <div class="crisis-block-num green">122K</div>
+          <div class="crisis-block-desc">Australians estimated to be experiencing homelessness at Census 2021, with young people aged 12 to 24 making up 23%.</div>
+          <div class="crisis-source">ABS, 2023</div>
+        </div>
+        <div class="crisis-block reveal reveal-delay-2">
+          <div class="crisis-block-num">1.6B</div>
+          <div class="crisis-block-desc">People globally living in subpar housing conditions, with 100 million having no home at all.</div>
+          <div class="crisis-source">UN Habitat, 2022</div>
+        </div>
+        <div class="crisis-block reveal reveal-delay-3">
+          <div class="crisis-block-num green">44K</div>
+          <div class="crisis-block-desc">New homes completed nationally in the first quarter of the Accord period, against a target of 60,000 per quarter.</div>
+          <div class="crisis-source">Property Council of Australia, 2025</div>
+        </div>
+        <div class="crisis-block reveal reveal-delay-1">
+          <div class="crisis-block-num">3%</div>
+          <div class="crisis-block-desc">Current share of modular construction in Australia's building industry, projected to reach 10% as demand surges.</div>
+          <div class="crisis-source">Ekanayake, 2026</div>
+        </div>
+      </div>
+    </div>
+    <div class="reveal reveal-delay-2">
+      <p class="section-lead" style="margin-top:0;margin-bottom:0.5rem;">What is driving the crisis?</p>
+      <div class="crisis-points">
+        <div class="crisis-point"><strong>Chronic undersupply.</strong> New construction is not keeping pace with demand driven by population growth and net overseas migration, identified by researchers as the most acute structural challenge.<div class="crisis-source">Ekanayake, B. (2026). 16017 Property Futures, UTS 2026</div></div>
+        <div class="crisis-point"><strong>Affordability collapse.</strong> The annual change in rents re-accelerated to 5.4% nationally as of January 2026, with the rental vacancy rate only easing slightly from the record low of 1.5% recorded in September 2025.<div class="crisis-source">CoreLogic, 2026</div></div>
+        <div class="crisis-point"><strong>Labour and cost pressures.</strong> Conventional construction is constrained by skilled labour shortages and rising material costs, limiting the speed at which developers can respond to demand. Automated and prefabricated methods directly address this bottleneck.</div>
+        <div class="crisis-point"><strong>Embodied and operational carbon.</strong> The built environment contributes approximately 23% of Australia's total greenhouse gas emissions. Technologies including BIM, IoT building management, and low-waste modular construction are central to the sector's decarbonisation pathway.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SUPPLY CHART -->
+<section id="supply-chart-section">
+  <div class="chart-layout">
+    <div class="reveal">
+      <p class="section-eyebrow">Data Visualisation</p>
+      <h2 class="section-headline">The supply<br><em>shortfall</em> in focus</h2>
+      <p class="section-lead">Australia's quarterly housing completions against the National Housing Accord target of 60,000 homes per quarter. The gap illustrates precisely why smart construction technologies are not optional but structurally necessary.</p>
+      <div class="chart-insight">
+        <p class="chart-insight-label">Key Insight</p>
+        <p class="chart-insight-text">No state or territory is tracking on pace with its Accord target. NSW completions reached 11,220 against a quarterly target of 18,822. Victoria is the closest to target at 15,302 against 15,318. The national shortfall compounds each quarter.</p>
+      </div>
+      <div class="chart-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#1a7f4b;"></div>Completions</div>
+        <div class="legend-item"><div class="legend-dot" style="background:rgba(0,102,204,0.4);border:1.5px dashed #0066cc;background:transparent;"></div>Target</div>
+      </div>
+    </div>
+    <div class="reveal reveal-delay-1">
+      <div class="chart-container">
+        <canvas id="supplyChart"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH -->
+<section id="technologies">
+  <div class="tech-header reveal">
+    <div>
+      <p class="section-eyebrow">Smart Technologies</p>
+      <h2 class="section-headline">Six technologies<br>reshaping how<br>we <em>build</em></h2>
+    </div>
+    <p class="section-lead">These innovations are not isolated. A single building today may be designed in BIM, fabricated by robotic arms, and managed by AI energy systems, representing a convergence that is both commercially compelling and environmentally necessary.</p>
+  </div>
+  <div class="tech-filter-bar reveal">
+    <button class="filter-btn active" onclick="filterTech('all', this)">All Technologies</button>
+    <button class="filter-btn" onclick="filterTech('construction', this)">Construction Methods</button>
+    <button class="filter-btn" onclick="filterTech('digital', this)">Digital Systems</button>
+    <button class="filter-btn" onclick="filterTech('sustainability', this)">Sustainability</button>
+  </div>
+  <div class="tech-grid" id="techGrid">
+
+    <div class="tech-tile reveal" data-category="construction sustainability">
+      <div class="tech-tile-top tt-prefab">
+        <div class="tech-tile-num">01</div>
+        <span class="tech-tile-tag">Prefabrication</span>
+      </div>
+      <div class="tech-tile-body">
+        <h3 class="tech-tile-title">Off-site Manufacturing</h3>
+        <p class="tech-tile-text">Building components including walls, floor cassettes, roof panels, and bathroom pods are assembled in a controlled factory environment before transport to site. This process eliminates weather delays, enables quality control unachievable on-site, and can cut material waste by up to 30%. Components may be produced from cross-laminated timber, precast concrete, or structural steel.</p>
+      </div>
+      <div class="tech-tile-foot">
+        <span class="tech-stat">Up to 40% faster delivery</span>
+        <a href="https://www.youtube.com/watch?v=WZ40c-mmyCY" target="_blank" class="watch-link">Watch video</a>
+      </div>
+    </div>
+
+    <div class="tech-tile reveal reveal-delay-1" data-category="construction sustainability">
+      <div class="tech-tile-top tt-modular">
+        <div class="tech-tile-num">02</div>
+        <span class="tech-tile-tag">Modular Housing</span>
+      </div>
+      <div class="tech-tile-body">
+        <h3 class="tech-tile-title">Volumetric Modular Systems</h3>
+        <p class="tech-tile-text">A specific evolution of prefabrication, modular construction delivers entire volumetric rooms complete with electrical, plumbing, and interior finishes that are stacked and connected on site. The NSW Government committed $10 million to modular social housing in February 2024. Industry projections forecast modular growing from 3% to 10% of the Australian construction market.</p>
+      </div>
+      <div class="tech-tile-foot">
+        <span class="tech-stat">60% reduction in site time</span>
+        <a href="https://www.youtube.com/watch?v=_bTPwV7pxgQ" target="_blank" class="watch-link">Watch video</a>
+      </div>
+    </div>
+
+    <div class="tech-tile reveal reveal-delay-2" data-category="construction sustainability">
+      <div class="tech-tile-top tt-print">
+        <div class="tech-tile-num">03</div>
+        <span class="tech-tile-tag">3D Printed Construction</span>
+      </div>
+      <div class="tech-tile-body">
+        <h3 class="tech-tile-title">Additive Manufacturing</h3>
+        <p class="tech-tile-text">Large-scale robotic arms equipped with extrusion nozzles deposit concrete layer by layer to form structural walls and elements directly from digital models. Australia's first 3D printed home was completed in Melbourne in August 2022. The UTS Advanced Fabrication Research Laboratory houses KR120 and KR10 industrial robot arms actively advancing this research frontier.</p>
+      </div>
+      <div class="tech-tile-foot">
+        <span class="tech-stat">35% labour cost reduction</span>
+        <a href="https://www.youtube.com/watch?v=vL2KoMNzGTo" target="_blank" class="watch-link">Watch video</a>
+      </div>
+    </div>
+
+    <div class="tech-tile reveal" data-category="digital sustainability">
+      <div class="tech-tile-top tt-iot">
+        <div class="tech-tile-num">04</div>
+        <span class="tech-tile-tag">IoT &amp; Smart Building Systems</span>
+      </div>
+      <div class="tech-tile-body">
+        <h3 class="tech-tile-title">Connected Buildings</h3>
+        <p class="tech-tile-text">Embedded sensors monitor energy, water, occupancy, air quality, and structural integrity in real time. Smart HVAC systems respond predictively to occupancy patterns. Automated lighting reduces parasitic consumption. Integrated building management platforms can reduce operational energy use by 20 to 30%, contributing directly to net-zero portfolio targets for institutional owners.</p>
+      </div>
+      <div class="tech-tile-foot">
+        <span class="tech-stat">25% operational energy savings</span>
+      </div>
+    </div>
+
+    <div class="tech-tile reveal reveal-delay-1" data-category="digital">
+      <div class="tech-tile-top tt-ai">
+        <div class="tech-tile-num">05</div>
+        <span class="tech-tile-tag">AI &amp; Big Data Analytics</span>
+      </div>
+      <div class="tech-tile-body">
+        <h3 class="tech-tile-title">Data-Driven Decision Making</h3>
+        <p class="tech-tile-text">Generative AI platforms are transforming property market analysis by modelling housing demand, predicting price movement, and optimising site selection for developers. AI-driven generative design produces thousands of code-compliant building configurations before construction commences, substantially accelerating approvals and reducing professional fees.</p>
+      </div>
+      <div class="tech-tile-foot">
+        <span class="tech-stat">Demand forecasting accuracy</span>
+      </div>
+    </div>
+
+    <div class="tech-tile reveal reveal-delay-2" data-category="digital construction">
+      <div class="tech-tile-top tt-bim">
+        <div class="tech-tile-num">06</div>
+        <span class="tech-tile-tag">Building Information Modelling</span>
+      </div>
+      <div class="tech-tile-body">
+        <h3 class="tech-tile-title">Digital Twin Foundation</h3>
+        <p class="tech-tile-text">BIM creates a shared parametric digital model integrating structural, mechanical, environmental, and cost data. Clash detection before construction commences eliminates costly on site variations. Throughout a building's lifecycle, the BIM model evolves into a digital twin that underpins smart building operations, energy monitoring, and facilities management.</p>
+      </div>
+      <div class="tech-tile-foot">
+        <span class="tech-stat">20% rework cost reduction</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CASE STUDIES -->
+<section id="research">
+  <div class="cases-header reveal">
+    <p class="section-eyebrow">Research &amp; Case Studies</p>
+    <h2 class="section-headline">Evidence from<br>the <em>field</em></h2>
+    <p class="section-lead">The following cases ground the theory in real-world outcomes, from Australia's own university research laboratories to internationally significant construction deployments.</p>
+  </div>
+  <div class="cases-grid">
+    <div class="case-main reveal">
+      <p class="case-main-eyebrow">Featured Case Study</p>
+      <h3 class="case-main-title">UTS Advanced Fabrication Research Laboratory: Robotic Construction Systems</h3>
+      <p class="case-main-body">The UTS AFRL operates at the frontier of automated construction research within the Faculty of Design, Architecture and Building. The laboratory houses a suite of industrial robotic systems including the KR120 six-axis robot, the collaborative UR10, and the KR10, alongside CNC routing and digital fabrication equipment. Research conducted here explores how robotic systems can assemble prefabricated structural components, perform precision material processing, and prototype 3D printed building elements at architectural scale. The facility represents a direct institutional response to the need for construction innovation as Australia confronts its housing supply challenge.</p>
+      <div class="case-metrics-row">
+        <div>
+          <div class="case-metric-val">KR120</div>
+          <div class="case-metric-desc">6-axis industrial robot<br>arm, AFRL UTS</div>
+        </div>
+        <div>
+          <div class="case-metric-val">Aug 2022</div>
+          <div class="case-metric-desc">First 3D printed house<br>completed in Australia</div>
+        </div>
+        <div>
+          <div class="case-metric-val">UTS DAB</div>
+          <div class="case-metric-desc">Faculty research partner<br>and co-investigator</div>
+        </div>
+      </div>
+    </div>
+    <div class="cases-side">
+      <div class="case-card-sm reveal reveal-delay-1">
+        <p class="case-card-sm-tag">NSW Government Initiative</p>
+        <h4 class="case-card-sm-title">$10 Million Modular Housing Program to Address Homelessness</h4>
+        <p class="case-card-sm-body">The NSW Government launched this initiative in February 2024, commissioning modular units that can be installed 60% faster than conventional construction. The program targets delivery of social housing to vulnerable Australians and directly references modular technology as a scalable solution to acute housing need.</p>
+      </div>
+      <div class="case-card-sm reveal reveal-delay-2">
+        <p class="case-card-sm-tag">International Benchmark</p>
+        <h4 class="case-card-sm-title">ICON Vulcan System: 100-Home 3D Printed Community, Texas</h4>
+        <p class="case-card-sm-body">ICON's Vulcan concrete extrusion platform demonstrated that 3D printing can scale to full residential developments. Each home required approximately 24 hours of machine print time while meeting local structural codes. The project represents the most significant proof of concept globally for additive residential construction at scale.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWS -->
+<section id="news">
+  <div class="news-header reveal">
+    <p class="section-eyebrow">Latest News</p>
+    <h2 class="section-headline">Recent <em>advancements</em><br>and industry developments</h2>
+  </div>
+  <div class="news-grid">
+    <div class="news-card reveal">
+      <div class="news-band nb-green"></div>
+      <div class="news-card-body">
+        <p class="news-date">March 2026</p>
+        <h4 class="news-card-title">Modular Construction Projected to Reach 10% of Australian Building Industry by 2030</h4>
+        <p class="news-card-text">Industry analysts project accelerating growth in modular and prefabricated housing as developers seek to close the gap on the National Housing Accord target. Regional Queensland and Western Australia are leading uptake, particularly for remote community and social housing applications where site-based construction is logistically costly.</p>
+        <span class="news-tag nt-green">Prefabrication</span>
+      </div>
+    </div>
+    <div class="news-card reveal reveal-delay-1">
+      <div class="news-band nb-blue"></div>
+      <div class="news-card-body">
+        <p class="news-date">February 2026</p>
+        <h4 class="news-card-title">AI-Integrated Building Management Systems Achieve 28% Energy Reduction in Commercial Offices</h4>
+        <p class="news-card-text">New research demonstrates that AI-driven building management systems in commercial office portfolios achieve energy reductions of up to 28% through predictive HVAC scheduling, occupancy-responsive lighting control, and real-time grid tariff optimisation. Findings have significant implications for institutional landlords with net-zero commitments.</p>
+        <span class="news-tag nt-blue">Smart Buildings</span>
+      </div>
+    </div>
+    <div class="news-card reveal reveal-delay-2">
+      <div class="news-band nb-stone"></div>
+      <div class="news-card-body">
+        <p class="news-date">January 2026</p>
+        <h4 class="news-card-title">Rental Vacancy at Historic Lows as Annual Growth Re-accelerates to 5.4%</h4>
+        <p class="news-card-text">CoreLogic's January 2026 data shows the national rental vacancy rate eased only marginally from the record low of 1.5% recorded in September 2025, rising to 1.7%. The annual change in rents re-accelerated to 5.4%, having sat at 3.4% six months prior, underscoring persistent supply inadequacy despite government housing commitments.</p>
+        <span class="news-tag nt-stone">Market Data</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section id="team">
+  <div class="team-header reveal">
+    <p class="section-eyebrow">Our Team</p>
+    <h2 class="section-headline">Research and<br><em>advisory</em> expertise</h2>
+    <p class="section-lead">FutureBuilt brings together expertise spanning property economics, construction technology research, and built environment sustainability, delivering rigorous, practice-ready insights for industry professionals.</p>
+  </div>
+  <div class="team-grid">
+    <div class="team-card reveal">
+      <div class="team-avatar-area ta-dark">
+        <div class="avatar-circle">HF</div>
+      </div>
+      <div class="team-card-body">
+        <h3 class="team-name">Harry Farrington</h3>
+        <p class="team-role">Founder &amp; Research Lead</p>
+        <p class="team-bio">Property Economics researcher at the University of Technology Sydney, specialising in the intersection of smart technology, sustainability, and construction economics. Working as a research analyst and leasing advisor with direct exposure to Sydney's institutional commercial property market and its evolving sustainability requirements.</p>
+        <div class="team-tags">
+          <span class="team-tag">PropTech</span>
+          <span class="team-tag">Smart Construction</span>
+          <span class="team-tag">Property Economics</span>
+        </div>
+      </div>
+    </div>
+    <div class="team-card reveal reveal-delay-1">
+      <div class="team-avatar-area ta-green">
+        <div class="avatar-circle">BE</div>
+      </div>
+      <div class="team-card-body">
+        <h3 class="team-name">Dr Biyanka Ekanayake</h3>
+        <p class="team-role">Academic Advisor</p>
+        <p class="team-bio">Lecturer and researcher at UTS School of Built Environment, specialising in Property Technology and Construction Automation. Research examines how smart technologies including modular housing, robotic fabrication, and AI-driven analytics, to address Australia's housing supply challenge and reduce the environmental impact of the built environment.</p>
+        <div class="team-tags">
+          <span class="team-tag">Construction Automation</span>
+          <span class="team-tag">Modular Housing</span>
+          <span class="team-tag">PropTech</span>
+        </div>
+      </div>
+    </div>
+    <div class="team-card reveal reveal-delay-2">
+      <div class="team-avatar-area ta-warm">
+        <div class="avatar-circle" style="font-size:1.2rem;">AFRL</div>
+      </div>
+      <div class="team-card-body">
+        <h3 class="team-name">UTS AFRL</h3>
+        <p class="team-role">Research Partner</p>
+        <p class="team-bio">The UTS Advanced Fabrication Research Laboratory provides state-of-the-art robotic fabrication capabilities including KR120 and KR10 six-axis industrial robot arms, the collaborative UR10, and CNC routing systems. The facility enables applied research into automated construction, 3D printed housing components, and precision digital fabrication at architectural scale.</p>
+        <div class="team-tags">
+          <span class="team-tag">Robotics</span>
+          <span class="team-tag">3D Printing</span>
+          <span class="team-tag">Digital Fabrication</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REFERENCES -->
+<section id="references">
+  <div class="refs-header reveal">
+    <p class="section-eyebrow">Bibliography</p>
+    <h2 class="section-headline">References<br>and <em>sources</em></h2>
+    <p class="section-lead">All content on FutureBuilt draws on peer-reviewed research, government data, and industry publications. Full citations are provided below.</p>
+  </div>
+  <div class="refs-list reveal">
+    <div class="ref-row">
+      <div class="ref-n">01</div>
+      <div class="ref-text">Australian Bureau of Statistics (2023). <em>2021 Census of Population and Housing: Estimating Homelessness.</em> ABS. Canberra, Australia.</div>
+    </div>
+    <div class="ref-row">
+      <div class="ref-n">02</div>
+      <div class="ref-text">UN Habitat (2022). <em>World Cities Report 2022: Envisaging the Future of Cities.</em> United Nations Human Settlements Programme. Nairobi, Kenya.</div>
+    </div>
+    <div class="ref-row">
+      <div class="ref-n">03</div>
+      <div class="ref-text">Australian Government (2023). <em>National Housing Accord: Target of 1.2 Million New Well-Located Homes by 2029.</em> Department of the Treasury. Canberra, Australia.</div>
+    </div>
+    <div class="ref-row">
+      <div class="ref-n">04</div>
+      <div class="ref-text">CoreLogic (2026). <em>Housing and Rental Market Report, January 2026.</em> RP Data Pty Ltd t/as CoreLogic. Sydney, Australia.</div>
+    </div>
+    <div class="ref-row">
+      <div class="ref-n">05</div>
+      <div class="ref-text">Ekanayake, B. (2026). <em>SmartTech to Resolve the Housing Crisis.</em> Lecture materials, 16017 Property Futures, Autumn 2026. University of Technology Sydney.</div>
+    </div>
+    <div class="ref-row">
+      <div class="ref-n">06</div>
+      <div class="ref-text">NSW Government (2023). <em>Exploring Modular Housing to Deliver More Social Homes Sooner.</em> Media Release. Office of the Premier. Sydney, Australia.</div>
+    </div>
+    <div class="ref-row">
+      <div class="ref-n">07</div>
+      <div class="ref-text">NSW Government (2024). <em>NSW Government's $10 Million Modular Housing Initiative to Address Homelessness.</em> Department of Communities and Justice. Sydney, Australia.</div>
+    </div>
+    <div class="ref-row">
+      <div class="ref-n">08</div>
+      <div class="ref-text">University of Technology Sydney (2024). <em>Advanced Fabrication Research Laboratory.</em> Faculty of Design, Architecture and Building. Sydney, Australia. Retrieved from uts.edu.au</div>
+    </div>
+    <div class="ref-row">
+      <div class="ref-n">09</div>
+      <div class="ref-text">World Green Building Council (2023). <em>Beyond the Business Case: Delivering Affordable Green Housing at Scale.</em> WorldGBC. London, United Kingdom.</div>
+    </div>
+    <div class="ref-row">
+      <div class="ref-n">10</div>
+      <div class="ref-text">Property Council of Australia (2025). <em>Housing Supply Tracker: State and Territory Completions Against National Accord Targets.</em> PCA. Sydney, Australia.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-wrap">
+    <div class="reveal">
+      <p class="section-eyebrow">Get In Touch</p>
+      <h2 class="section-headline">Contact<br><em>FutureBuilt</em></h2>
+      <p class="section-lead">Whether you are a developer, architect, sustainability consultant, or researcher, we welcome enquiries about educational resources, research partnerships, and consulting services.</p>
+    </div>
+    <div class="contact-grid">
+      <div class="reveal">
+        <div class="contact-info-item">
+          <p class="contact-info-label">Email</p>
+          <p class="contact-info-val">harry.farrington@futurebuilt.au</p>
+        </div>
+        <div class="contact-info-item">
+          <p class="contact-info-label">Location</p>
+          <p class="contact-info-val">University of Technology Sydney<br>School of Built Environment<br>Sydney NSW 2007</p>
+        </div>
+        <div class="contact-info-item">
+          <p class="contact-info-label">Research Areas</p>
+          <p class="contact-info-val">Smart Construction<br>Sustainable Buildings<br>PropTech &amp; Housing Policy</p>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-1">
+        <form onsubmit="handleSubmit(event)">
+          <div class="form-row">
+            <input type="text" placeholder="Your name" required>
+            <input type="email" placeholder="Email address" required>
+          </div>
+          <div class="form-field">
+            <input type="text" placeholder="Organisation">
+          </div>
+          <div class="form-field">
+            <select>
+              <option value="">Area of enquiry</option>
+              <option>Educational Resources</option>
+              <option>Research Partnership</option>
+              <option>Consulting Services</option>
+              <option>Speaking or Presentations</option>
+              <option>General Enquiry</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <textarea placeholder="Your message"></textarea>
+          </div>
+          <button type="submit" class="form-submit" id="submitBtn">Send message</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-brand">Future<em>Built</em></div>
+    <p class="footer-copy">Educational · Research · Consulting<br>© 2026 Harry Farrington · University of Technology Sydney</p>
+    <p class="footer-copy" style="margin-top:0.5rem;font-size:0.7rem;">This website was developed with the assistance of Generative AI tools in accordance with the assessment guidelines for 16017 Property Futures, UTS Autumn 2026.</p>
+  </div>
+  <ul class="footer-links">
+    <li><a href="#crisis">The Challenge</a></li>
+    <li><a href="#technologies">Technologies</a></li>
+    <li><a href="#research">Case Studies</a></li>
+    <li><a href="#news">News</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#references">References</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+
+/* ============ SCROLL PROGRESS BAR ============ */
+const progressBar = document.getElementById('progress-bar');
+window.addEventListener('scroll', () => {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+  progressBar.style.width = pct + '%';
+});
+
+/* ============ SCROLL REVEAL ============ */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('in');
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+/* ============ HERO PARTICLE CANVAS ============ */
+(function() {
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resize() {
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+
+  function Particle() {
+    this.x = Math.random() * W;
+    this.y = Math.random() * H;
+    this.r = Math.random() * 1.5 + 0.3;
+    this.vx = (Math.random() - 0.5) * 0.3;
+    this.vy = (Math.random() - 0.5) * 0.3;
+    this.alpha = Math.random() * 0.4 + 0.1;
+    this.color = Math.random() > 0.5 ? '26,127,75' : '0,102,204';
+  }
+
+  function init() {
+    resize();
+    particles = [];
+    const count = Math.floor((W * H) / 12000);
+    for (let i = 0; i < count; i++) particles.push(new Particle());
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0) p.x = W;
+      if (p.x > W) p.x = 0;
+      if (p.y < 0) p.y = H;
+      if (p.y > H) p.y = 0;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${p.color},${p.alpha})`;
+      ctx.fill();
+    });
+    particles.forEach((a, i) => {
+      particles.slice(i + 1).forEach(b => {
+        const dx = a.x - b.x, dy = a.y - b.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 100) {
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.strokeStyle = `rgba(26,127,75,${0.06 * (1 - dist / 100)})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      });
+    });
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', init);
+  init();
+  draw();
+})();
+
+/* ============ HOUSING SUPPLY CHART ============ */
+(function() {
+  const chartObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        buildChart();
+        chartObserver.disconnect();
+      }
+    });
+  }, { threshold: 0.3 });
+
+  const chartEl = document.getElementById('supplyChart');
+  if (chartEl) chartObserver.observe(chartEl);
+
+  function buildChart() {
+    const states = ['NSW', 'VIC', 'QLD', 'WA', 'SA', 'TAS', 'NT', 'ACT'];
+    const completions = [11220, 15302, 8177, 5924, 3104, 704, 122, 943];
+    const targets = [18822, 15318, 12287, 8454, 4181, 1306, 571, 1053];
+
+    new Chart(document.getElementById('supplyChart'), {
+      type: 'bar',
+      data: {
+        labels: states,
+        datasets: [
+          {
+            label: 'Completions',
+            data: completions,
+            backgroundColor: states.map((s, i) =>
+              completions[i] >= targets[i]
+                ? 'rgba(26,127,75,0.85)'
+                : 'rgba(26,127,75,0.65)'
+            ),
+            borderRadius: 6,
+            borderSkipped: false,
+          },
+          {
+            label: 'Target',
+            data: targets,
+            type: 'line',
+            borderColor: 'rgba(0,102,204,0.7)',
+            backgroundColor: 'rgba(0,102,204,0.07)',
+            borderWidth: 1.5,
+            borderDash: [5, 4],
+            pointBackgroundColor: 'rgba(0,102,204,0.8)',
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            fill: false,
+            tension: 0.3,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: {
+          duration: 1400,
+          easing: 'easeOutQuart',
+          delay: (ctx) => ctx.dataIndex * 80,
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(29,29,31,0.92)',
+            titleColor: '#ffffff',
+            bodyColor: 'rgba(255,255,255,0.7)',
+            padding: 12,
+            cornerRadius: 8,
+            callbacks: {
+              label: (ctx) => ` ${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString()}`
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            border: { display: false },
+            ticks: {
+              color: 'rgba(29,29,31,0.5)',
+              font: { family: 'Figtree', size: 12, weight: '400' }
+            }
+          },
+          y: {
+            grid: { color: 'rgba(29,29,31,0.06)', lineWidth: 1 },
+            border: { display: false, dash: [4, 4] },
+            ticks: {
+              color: 'rgba(29,29,31,0.4)',
+              font: { family: 'Figtree', size: 11 },
+              callback: v => v >= 1000 ? (v / 1000).toFixed(0) + 'K' : v
+            }
+          }
+        }
+      }
+    });
+  }
+})();
+
+/* ============ TECH FILTER ============ */
+function filterTech(category, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#techGrid .tech-tile').forEach(tile => {
+    const cats = tile.dataset.category || '';
+    if (category === 'all' || cats.includes(category)) {
+      tile.classList.remove('dimmed');
+    } else {
+      tile.classList.add('dimmed');
+    }
+  });
+}
+
+/* ============ CONTACT FORM ============ */
+function handleSubmit(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  btn.textContent = 'Message sent';
+  btn.style.background = '#1a7f4b';
+  setTimeout(() => {
+    btn.textContent = 'Send message';
+    btn.style.background = '';
+  }, 3500);
+}
+</script>
+</body>
+</html>
